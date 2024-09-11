@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}Notas{% endblock %}
+
+{% block content %}
+<h1 class="text-center my-3">Notas</h1>
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10 col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title text-center">Boletim {{ year }}</h4>
+
+                    <div class="mb-4">
+                        <form method="GET" action="{{ url_for('grades') }}" class="form-group">
+                            <label for="school_year"><strong>Ano Letivo</strong></label>
+                            <div class="input-group">
+                                <select name="school_year" id="school_year" class="form-select">
+
+                                </select>
+                                <button type="submit" class="btn btn-success ms-2">Consultar Boletim</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Disciplina</th>
+                                    <th scope="col">Etapa 1</th>
+                                    <th scope="col">Etapa 2</th>
+                                    <th scope="col">Etapa 3</th>
+                                    <th scope="col">Etapa 4</th>
+                                    <th scope="col">Média Final</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if grades_data %}
+                                    {% for data in grades_data %}
+                                    <tr>
+                                        <th scope="row">{{ data.disciplina }}</th>
+                                        <td>{{ data.nota_etapa_1['nota'] }}</td>
+                                        <td>{{ data.nota_etapa_2['nota'] }}</td>
+                                        <td>{{ data.nota_etapa_3['nota'] }}</td>
+                                        <td>{{ data.nota_etapa_4['nota'] }}</td>
+                                        <td>{{ data.media_disciplina }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <p class="text-center"><strong>Você não tem nenhum boletim registrado nesse ano!</strong></p>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
