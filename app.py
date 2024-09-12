@@ -22,8 +22,11 @@ oauth.register(
 @app.route("/")
 def index():
     if "suap_token" in session:
-        profile_data = oauth.suap.get("v2/minhas-informacoes/meus-dados")
-        return render_template("index.html", profile_data=profile_data.json())
+        if "profile_data" not in session:
+            profile_data = oauth.suap.get("v2/minhas-informacoes/meus-dados")
+            session["profile_data"] = profile_data.json()
+        profile_data = session["profile_data"]
+        return render_template("index.html", profile_data=profile_data)
     else:
         return render_template("login.html")
 
@@ -37,7 +40,7 @@ def login():
 
 @app.route('/logout')
 def logout():
-    session.pop('suap_token', None)
+    session.clear()
     return redirect(url_for('index'))
 
 
@@ -51,8 +54,11 @@ def auth():
 @app.route("/profile")
 def profile():
     if "suap_token" in session:
-        profile_data = oauth.suap.get("v2/minhas-informacoes/meus-dados")
-        return render_template("profile.html", profile_data=profile_data.json())
+        if "profile_data" not in session:
+            profile_data = oauth.suap.get("v2/minhas-informacoes/meus-dados")
+            session["profile_data"] = profile_data.json()
+        profile_data = session["profile_data"]
+        return render_template("profile.html", profile_data=profile_data)
     else:
         return render_template("index.html")
 
@@ -60,12 +66,15 @@ def profile():
 @app.route("/grades", methods=["GET"])
 def grades():
     if "suap_token" in session:
+        if "profile_data" not in session:
+            profile_data = oauth.suap.get("v2/minhas-informacoes/meus-dados")
+            session["profile_data"] = profile_data.json()
         year = request.args.get("school_year", datetime.now().year)
-        profile_data = oauth.suap.get("v2/minhas-informacoes/meus-dados")
         grades_data = oauth.suap.get(f"v2/minhas-informacoes/boletim/{year}/1/")
+        profile_data = session["profile_data"]
         if grades_data:
-            return render_template("grades.html", grades_data=grades_data.json(), profile_data=profile_data.json(), year=year)
+            return render_template("grades.html", grades_data=grades_data.json(), profile_data=profile_data, year=year)
         else:
-            return render_template("grades.html", profile_data=profile_data.json(), year=year)
+            return render_template("grades.html", profile_data=profile_data, year=year)
     else:
         return render_template("index.html")
