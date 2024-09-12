@@ -66,6 +66,6 @@ def grades():
         if grades_data:
             return render_template("grades.html", grades_data=grades_data.json(), profile_data=profile_data.json(), year=year)
         else:
-            return render_template("grades.html", profile_data=profile_data.json())
+            return render_template("grades.html", profile_data=profile_data.json(), year=year)
     else:
         return render_template("index.html")
