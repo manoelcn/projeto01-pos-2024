@@ -25,34 +25,38 @@
                     </div>
 
                     <div class="table-responsive">
+                        {% if grades_data %}
                         <table class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th scope="col">Disciplina</th>
-                                    <th scope="col">Etapa 1</th>
-                                    <th scope="col">Etapa 2</th>
-                                    <th scope="col">Etapa 3</th>
-                                    <th scope="col">Etapa 4</th>
-                                    <th scope="col">Média Final</th>
+                                    <th scope="col" class="text-center">Disciplina</th>
+                                    <th scope="col" class="text-center">Etapa 1</th>
+                                    <th scope="col" class="text-center">Etapa 2</th>
+                                    <th scope="col" class="text-center">Etapa 3</th>
+                                    <th scope="col" class="text-center">Etapa 4</th>
+                                    <th scope="col" class="text-center">Número de Faltas</th>
+                                    <th scope="col" class="text-center">Média Final</th>
+                                    <th scope="col" class="text-center">Situação</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {% if grades_data %}
-                                    {% for data in grades_data %}
-                                    <tr>
-                                        <th scope="row">{{ data.disciplina }}</th>
-                                        <td>{{ data.nota_etapa_1['nota'] }}</td>
-                                        <td>{{ data.nota_etapa_2['nota'] }}</td>
-                                        <td>{{ data.nota_etapa_3['nota'] }}</td>
-                                        <td>{{ data.nota_etapa_4['nota'] }}</td>
-                                        <td>{{ data.media_disciplina }}</td>
-                                    </tr>
-                                    {% endfor %}
-                                {% else %}
-                                    <p class="text-center"><strong>Você não tem nenhum boletim registrado nesse ano!</strong></p>
-                                {% endif %}
+                                {% for data in grades_data %}
+                                <tr>
+                                    <th scope="row">{{ data.disciplina }}</th>
+                                    <td class="text-center">{{ data.nota_etapa_1['nota'] if data.nota_etapa_1['nota'] is not none else '-' }}</td>
+                                    <td class="text-center">{{ data.nota_etapa_2['nota'] if data.nota_etapa_2['nota'] is not none else '-' }}</td>
+                                    <td class="text-center">{{ data.nota_etapa_3['nota'] if data.nota_etapa_3['nota'] is not none else '-' }}</td>
+                                    <td class="text-center">{{ data.nota_etapa_4['nota'] if data.nota_etapa_4['nota'] is not none else '-' }}</td>
+                                    <td class="text-center">{{ data.numero_faltas }}</td>
+                                    <td class="text-center">{{ data.media_disciplina if data.media_disciplina is not none else '-' }}</td>
+                                    <td class="text-center">{{ data.situacao }}</td>
+                                </tr>
+                                {% endfor %}
                             </tbody>
                         </table>
+                        {% else %}
+                            <p class="text-center"><strong>Você não tem nenhum boletim registrado em {{ year }}!</strong></p>
+                        {% endif %}
                     </div>
                 </div>
             </div>
